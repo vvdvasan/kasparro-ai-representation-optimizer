@@ -55,24 +55,37 @@ def fetch_policies(token):
     return []
 
 if __name__ == "__main__":
+    import sys
+    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+    from audit_engine import run_audit
+
     token = get_access_token()
     if token:
-        print("=== PRODUCTS ===")
         products = fetch_products(token)
-        print(f"Found {len(products)} products")
-
-        print("\n=== PAGES ===")
         pages = fetch_pages(token)
-        for page in pages:
-            print(f"- {page['title']}")
-
-        print("\n=== SHOP ===")
         shop = fetch_shop(token)
-        print(f"Name: {shop.get('name')}")
-        print(f"Email: {shop.get('email')}")
-        print(f"Description: {shop.get('description')}")
-
-        print("\n=== POLICIES ===")
         policies = fetch_policies(token)
-        for policy in policies:
-            print(f"- {policy['title']}")
+
+        results = run_audit(products, shop, policies, pages)
+
+        print(f"\n🏪 STORE: {shop.get('name')}")
+        print(f"🎯 AI READINESS SCORE: {results['score']}/100")
+        print(f"📊 TOTAL ISSUES: {results['total_issues']}")
+        print(f"🔴 CRITICAL: {len(results['critical'])}")
+        print(f"🟠 HIGH: {len(results['high'])}")
+        print(f"🟡 MEDIUM: {len(results['medium'])}")
+
+        print("\n🔴 CRITICAL ISSUES:")
+        for issue in results['critical']:
+            print(f"  [{issue['product']}] {issue['check']}")
+            print(f"  → Fix: {issue['fix']}\n")
+
+        print("🟠 HIGH ISSUES:")
+        for issue in results['high']:
+            print(f"  [{issue['product']}] {issue['check']}")
+            print(f"  → Fix: {issue['fix']}\n")
+
+        print("🟡 MEDIUM ISSUES:")
+        for issue in results['medium']:
+            print(f"  [{issue['product']}] {issue['check']}")
+            print(f"  → Fix: {issue['fix']}\n")
