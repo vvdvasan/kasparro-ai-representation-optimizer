@@ -1,1 +1,0 @@
-# kasparro-ai-representation-optimizer

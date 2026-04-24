@@ -57,14 +57,6 @@ def audit_products(products):
 def audit_store(shop):
     issues = []
 
-    if not shop.get("description"):
-        issues.append({
-            "check": "Missing Store Description",
-            "product": "Store",
-            "severity": "CRITICAL",
-            "fix": "Add a store description that clearly explains what you sell and who you serve."
-        })
-
     if not shop.get("name"):
         issues.append({
             "check": "Missing Store Name",
@@ -128,11 +120,38 @@ def run_audit(products, shop, policies, pages):
     high = [i for i in all_issues if i["severity"] == "HIGH"]
     medium = [i for i in all_issues if i["severity"] == "MEDIUM"]
 
-    score = 100
-    score -= len(critical) * 10
-    score -= len(high) * 5
-    score -= len(medium) * 2
-    score = max(0, score)
+    total_products = product_stats["total_products"]
+
+    # Product completeness score (0-60 points) — weighted partial credit
+    def product_completeness(p):
+        score = 0
+        if p.get("body_html"): score += 4      # most important
+        if p.get("product_type"): score += 3   # second
+        if p.get("tags"): score += 2           # third
+        if p.get("vendor"): score += 1         # least
+        return score
+
+    max_per_product = 10  # 4+3+2+1
+    total_possible = total_products * max_per_product
+    earned = sum(product_completeness(p) for p in products)
+    product_score = round((earned / total_possible) * 60) if total_possible else 0
+
+    # Store info score (0-15 points)
+    store_score = 15
+
+    # Policies score (0-15 points)
+    found_policies = [p["title"].lower() for p in policies]
+    required = ["refund policy", "privacy policy", "shipping policy", "terms of service"]
+    policy_score = round((sum(1 for p in required if p in found_policies) / len(required)) * 15)
+
+    # Pages score (0-10 points)
+    found_pages = [p["title"].lower() for p in pages]
+    has_about = "about us" in found_pages or "about" in found_pages
+    has_faq = "faq" in found_pages or "frequently asked questions" in found_pages
+    page_score = (5 if has_about else 0) + (5 if has_faq else 0)
+
+    score = product_score + store_score + policy_score + page_score
+    score = max(0, min(100, score))
 
     return {
         "score": score,

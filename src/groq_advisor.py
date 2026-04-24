@@ -27,6 +27,35 @@ Be direct and specific. No fluff."""
     )
     return response.choices[0].message.content
 
+def generate_fix_content(issue):
+    check = issue['check']
+    product = issue['product']
+
+    if "Missing Product Description" in check:
+        prompt = f"""You are a Shopify product copywriter. Write a product description for '{product}'.
+Write 2-3 sentences covering what it is, key features, and who it's for.
+Return ONLY the description text. No labels, no quotes, no extra text."""
+
+    elif "Missing Product Tags" in check:
+        prompt = f"""You are a Shopify SEO expert. Generate 5-7 relevant tags for a product called '{product}'.
+Return ONLY a comma-separated list of tags. No labels, no extra text.
+Example format: tag1, tag2, tag3"""
+
+    elif "Missing Product Category" in check:
+        prompt = f"""You are a Shopify product expert. Suggest the most appropriate product_type category for '{product}'.
+Return ONLY the category name, 1-3 words maximum. No labels, no extra text.
+Example: Motorcycle Gear"""
+
+    else:
+        return None
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=150
+    )
+    return response.choices[0].message.content.strip()
+
 def get_executive_summary(results, shop_name):
     prompt = f"""You are an AI commerce expert. A Shopify store called '{shop_name}' just ran an AI readiness audit.
 
