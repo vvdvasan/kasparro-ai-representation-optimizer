@@ -1,6 +1,7 @@
 import streamlit as st
 import sys
 import os
+from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 from shopify_client import get_access_token, fetch_products, fetch_pages, fetch_shop, fetch_policies, update_product
@@ -16,7 +17,10 @@ st.set_page_config(
 st.title("🏪 AuraScan")
 st.caption("Track 5 — Kasparro Agentic Commerce Hackathon")
 
-@st.cache_data(ttl=7)
+if "fixed_issues" not in st.session_state:
+    st.session_state["fixed_issues"] = []
+
+@st.cache_data(ttl=10)
 def load_store_data():
     token = get_access_token()
     if not token:
@@ -84,7 +88,7 @@ def render_issue(issue, key_prefix, products):
 
             if st.session_state.get(fix_key):
                 st.markdown("**🤖 Suggested Fix:**")
-                st.code(st.session_state[fix_key])
+                st.markdown(f"> {st.session_state[fix_key]}")
 
                 if st.button(f"⚡ Apply Fix to Shopify", key=f"{key_prefix}_apply_{issue['check']}_{issue['product']}"):
                     product_id = get_product_id_by_name(products, issue['product'])
@@ -108,12 +112,18 @@ def render_issue(issue, key_prefix, products):
                         if result:
                             st.success(f"✅ Fix applied to {issue['product']} in Shopify!")
                             st.session_state[applied_key] = True
+                            st.session_state["fixed_issues"].append({
+                                "product": issue['product'],
+                                "check": issue['check'],
+                                "severity": issue['severity'],
+                                "time": datetime.now().strftime("%I:%M %p")
+                            })
                             st.cache_data.clear()
                             st.rerun()
                         else:
                             st.error("Failed to apply fix. Check your API token permissions.")
 
-tab1, tab2, tab3 = st.tabs(["🔴 Critical Issues", "🟠 High Issues", "🟡 Medium Issues"])
+tab1, tab2, tab3, tab4 = st.tabs(["🔴 Critical Issues", "🟠 High Issues", "🟡 Medium Issues", f"✅ Fixed ({len(st.session_state['fixed_issues'])})"])
 
 with tab1:
     if results['critical']:
@@ -135,6 +145,13 @@ with tab3:
             render_issue(issue, "med", products)
     else:
         st.success("No medium issues!")
+
+with tab4:
+    if st.session_state["fixed_issues"]:
+        for fixed in st.session_state["fixed_issues"]:
+            st.success(f"✅ [{fixed['product']}] {fixed['check']} — Fixed at {fixed['time']}")
+    else:
+        st.info("No fixes applied yet in this session.")
 
 st.divider()
 st.caption(f"Store: {shop.get('name')} | Total Issues: {results['total_issues']} | Powered by Groq + Shopify Admin API")
