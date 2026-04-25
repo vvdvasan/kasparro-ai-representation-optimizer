@@ -75,6 +75,12 @@ The tool works in four stages:
    fix advice, and AI-generated fix content that merchants can review 
    and push directly to Shopify in one click
 
+**The 14 audit checks cover:**
+- Products (6): Description, Category, Tags, Vendor, SKU, Weight 
+- Store (2): Store Name, Store Description
+- Policies (4): Refund, Privacy, Shipping, Terms of Service 
+- Pages (2): About Us, FAQ
+
 The output is a Streamlit dashboard showing the score, 
 all issues ranked by severity, and actionable 
 recommendations — giving merchants a clear picture of 
@@ -191,9 +197,7 @@ push over fully autonomous fixing.
   underpriced products relative to market benchmarks
 - Demand-Based Promotions — surface high-demand products 
   with discount recommendations to maximize AI promotion
-- Sales data and inventory intelligence via read_orders 
-  and read_inventory scopes — variant-level velocity 
-  tracking, stock alerts, demand-based promotions
+- Chatbot for bulk product management across large catalogs
 
 ## 7. Tradeoffs We Encountered
 
