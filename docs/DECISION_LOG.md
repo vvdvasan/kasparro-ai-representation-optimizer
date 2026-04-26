@@ -3,7 +3,7 @@
 
 ---
 
-## Decision 001: Track Selection
+## Decision 01: Track Selection
 **Date:** 2026-04-07
 **Decision:** Chose Track 5 (AI Representation Optimizer) over Tracks 1–4.
 **Reasoning:** Track 1 was familiar ground — a similar e-commerce 
@@ -19,7 +19,7 @@ over polish.
 
 ---
 
-## Decision 002: Tool Name
+## Decision 02: Tool Name
 **Date:** 2026-04-07
 **Decision:** Named the tool AuraScan. Named the team StoreSignal.
 **Reasoning:** AuraScan communicates the core idea precisely — scanning 
@@ -31,7 +31,7 @@ rejected for lacking diagnostic connotation.
 
 ---
 
-## Decision 003: Audit Scope — 14 Checks
+## Decision 03: Audit Scope — 14 Checks
 **Date:** 2026-04-08
 **Decision:** Scoped the audit to 14 deterministic checks across four 
 categories: products (6), store identity (2), policies (4), pages (2).
@@ -52,7 +52,7 @@ to avoid false positives.
 
 ---
 
-## Decision 004: Scoring Model — Reward-Based over Penalty-Based
+## Decision 04: Scoring Model — Reward-Based over Penalty-Based
 **Date:** 2026-04-10
 **Decision:** Replaced penalty-based scoring with reward-based weighted 
 partial credit.
@@ -71,7 +71,7 @@ motivating in practice.
 
 ---
 
-## Decision 005: Authentication — Direct Token over OAuth
+## Decision 05: Authentication — Direct Token over OAuth
 **Date:** 2026-04-18
 **Decision:** Replaced OAuth client_credentials flow with a direct Admin 
 API access token (shpat_).
@@ -87,7 +87,7 @@ production use.
 
 ---
 
-## Decision 006: AI vs Deterministic Boundary
+## Decision 06: AI vs Deterministic Boundary
 **Date:** 2026-04-18
 **Decision:** All 14 audit checks and score calculations are 
 deterministic. Groq is used exclusively for advice generation and fix 
@@ -105,7 +105,7 @@ score fully trustworthy and auditable.
 
 ---
 
-## Decision 007: Agentic Fix — Approve Before Push
+## Decision 07: Agentic Fix — Approve Before Push
 **Date:** 2026-04-18
 **Decision:** The Apply Fix pipeline requires explicit merchant approval 
 before any write to Shopify.
@@ -121,7 +121,7 @@ meaningful reduction in risk of incorrect data being published.
 
 ---
 
-## Decision 008: Auto-Fix Scope — Three Issue Types Only
+## Decision 08: Auto-Fix Scope — Three Issue Types Only
 **Date:** 2026-04-18
 **Decision:** Auto-fix is available only for product descriptions, tags, 
 and categories. All other issue types surface advice only.
@@ -138,7 +138,7 @@ defensible output on every fix applied.
 
 ---
 
-## Decision 009: Lazy Loading for Groq Advice
+## Decision 09: Lazy Loading for Groq Advice
 **Date:** 2026-04-18
 **Decision:** Groq advice is generated on demand when the merchant 
 explicitly requests it — not pre-generated on dashboard load.
@@ -153,7 +153,7 @@ immediately. The speed and efficiency gain justifies this.
 
 ---
 
-## Decision 010: Dual-Layer Caching Strategy
+## Decision 10: Dual-Layer Caching Strategy
 **Date:** 2026-04-18
 **Decision:** Store data is cached at a 10-second TTL. The executive 
 summary is cached separately at 300 seconds.
@@ -169,7 +169,7 @@ both real-time responsiveness and API efficiency.
 
 ---
 
-## Decision 011: Single Store vs Multi-Store
+## Decision 11: Single Store vs Multi-Store
 **Date:** 2026-04-07
 **Decision:** Built for single-store operation using a hardcoded Admin 
 API token. OAuth-based multi-merchant support was deferred.
