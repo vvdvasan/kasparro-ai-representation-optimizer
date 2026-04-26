@@ -10,7 +10,7 @@ AuraScan is a four-component pipeline built in Python,
 where each component has a single responsibility and 
 communicates with the next through well-defined interfaces.
 
-'''
+```
 Shopify Admin API
 ↓
 shopify_client.py   — data retrieval layer
@@ -22,7 +22,7 @@ groq_advisor.py     — AI advice generation layer
 app.py              — Streamlit presentation layer
 ↑
 Shopify Admin API   — write-back layer (Apply Fix)
-'''
+```
 Data flows in one direction during an audit. On a fix, 
 the write-back path returns from app.py through 
 shopify_client.py to Shopify. No component holds state 
