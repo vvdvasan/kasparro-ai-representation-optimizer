@@ -6,14 +6,14 @@
 
 ## What This Is
 
-AuraScan is a merchant-facing diagnostic tool that helps 
-Shopify store owners understand how AI agents perceive 
-their store — and what to fix to improve that perception.
+AuraScan is a merchant-facing diagnostic tool that helps Shopify store 
+owners understand how AI agents perceive their store — and what to fix 
+to improve that perception.
 
-When a customer asks ChatGPT or Google AI Mode to recommend 
-a product, those agents read store data directly. If that 
-data is incomplete, vague, or missing, the merchant gets 
-skipped. Most merchants have no visibility into this problem.
+When a customer asks ChatGPT or Google AI Mode to recommend a product, 
+those agents read store data directly. If that data is incomplete, vague, 
+or missing, the merchant gets skipped. Most merchants have no visibility 
+into this problem.
 
 AuraScan makes it visible — and fixable.
 
@@ -21,27 +21,38 @@ AuraScan makes it visible — and fixable.
 
 ## What It Does
 
-AuraScan connects to a Shopify store via Admin API, runs 
-14 diagnostic checks across product data, store identity, 
-policies, and pages, and generates an AI Readiness Score 
-out of 100. For each issue found, it provides a severity 
-rating, a specific fix recommendation, and an AI-generated 
-fix that the merchant can review and push directly to 
+AuraScan connects to a Shopify store via Admin API, runs 14 diagnostic 
+checks across product data, store identity, policies, and pages, and 
+generates an AI Readiness Score out of 100. For each issue found, it 
+provides a severity rating, a specific fix recommendation, and an 
+AI-generated fix that the merchant can review and push directly to 
 Shopify in one click.
 
 **Score journey on our demo store (RiderzPlanet):**
-0/100 (intentionally broken) → 51/100 (baseline with 
-mixed data) → 74/100 (after fixing critical issues) → 
-100/100 (fully optimised)
+0/100 (intentionally broken) → 51/100 (baseline with mixed data) → 
+74/100 (after fixing critical issues) → 100/100 (fully optimised)
+
+---
+
+## The Full Loop
+
+Most diagnostic tools stop at identifying problems. AuraScan closes 
+the loop:
+
+**Diagnose → Understand → Advise → Fix → Verify**
+
+The merchant sees the issue, reads AI-generated advice, reviews a 
+suggested fix, confirms it, and watches their score update in real time 
+— all from one dashboard, without touching Shopify admin manually.
 
 ---
 
 ## The 14 Audit Checks
 
-Products (6): Description, Category, Tags, Vendor, SKU, 
-Weight — Store (2): Store Name, Store Description — 
-Policies (4): Refund, Privacy, Shipping, Terms of Service 
-— Pages (2): About Us, FAQ
+Products (6): Description, Category, Tags, Vendor, SKU, Weight —
+Store (2): Store Name, Store Description —
+Policies (4): Refund, Privacy, Shipping, Terms of Service —
+Pages (2): About Us, FAQ
 
 ---
 
@@ -54,17 +65,20 @@ Shopify Admin API 2026-04 · python-dotenv
 
 ## Project Structure
 
+```
 kasparro-ai-representation-optimizer/
-├── app.py                  — Streamlit dashboard
+├── app.py                    — Streamlit dashboard + orchestration
 ├── src/
-│   ├── shopify_client.py   — Shopify API layer
-│   ├── audit_engine.py     — 14-check audit + scoring
-│   └── groq_advisor.py     — Groq AI advice + fix generation
+│   ├── shopify_client.py     — Shopify API layer (read + write)
+│   ├── audit_engine.py       — 14-check audit + reward-based scoring
+│   └── groq_advisor.py       — Groq AI advice + fix content generation
 ├── docs/
-│   ├── PRODUCT_DOCUMENT.md
-│   └── TECHNICAL_DOCUMENT.md
+│   ├── PRODUCT_DOCUMENT.md   — Product thinking, decisions, tradeoffs
+│   ├── TECHNICAL_DOCUMENT.md — Architecture, failure handling, limitations
+│   └── DECISION_LOG.md       — Every key decision with reasoning
 ├── requirements.txt
 └── .env.example
+```
 
 ---
 
@@ -85,16 +99,17 @@ pip install -r requirements.txt
 
 Copy `.env.example` to `.env` and fill in your credentials:
 
+```
 SHOPIFY_STORE_URL=your-store.myshopify.com
 SHOPIFY_ACCESS_TOKEN=shpat_your_token_here
 GROQ_API_KEY=gsk_your_key_here
+```
 
-To get your Shopify Admin API token: Shopify Admin → 
-Settings → Apps and sales channels → Develop apps → 
-your app → API credentials → Admin API access token.
+To get your Shopify Admin API token: Shopify Admin → Settings → 
+Apps and sales channels → Develop apps → your app → API credentials 
+→ Admin API access token.
 
-To get your Groq API key: console.groq.com → API Keys → 
-Create API Key.
+To get your Groq API key: console.groq.com → API Keys → Create API Key.
 
 **4. Run the dashboard**
 ```bash
@@ -105,10 +120,32 @@ Open your browser at `http://localhost:8501`.
 
 ---
 
+## Judging Criteria Alignment
+
+| Criteria | Weight | How AuraScan Addresses It |
+|---|---|---|
+| Product Thinking & Documentation | 25% | 7-section Product Document, 11-entry Decision Log, explicit scope decisions and tradeoffs |
+| Technical Execution & Architecture | 25% | 4-component pipeline, deterministic/AI boundary, failure handling documented per component |
+| Product Experience | 20% | Real-time score updates, agentic Apply Fix loop, 4-tab dashboard with fix history |
+| Business Relevance | 15% | Solves the supply-side AI readiness gap — merchants losing AI-driven discovery without knowing why |
+| Originality & Insight | 15% | Full agentic loop working end to end — Diagnose, Advise, Fix, Verify in one dashboard |
+
+---
+
+## Contribution Note
+
+Danavasan V — product thinking, system architecture, Shopify API 
+integration, audit engine design, Groq integration, dashboard 
+development, agentic fix pipeline, all documentation.
+
+Dhatchanamoorthy K — ideation support and review.
+
+---
+
 ## Submission Details
 
 **Team:** StoreSignal
-**Members:** Danavasan V (23BAU012) · Dhatchanamoorthy K 
-(23BAD027) — Kumaraguru College of Technology, Coimbatore
+**Members:** Danavasan V (23BAU012) · Dhatchanamoorthy K (23BAD027) 
+— Kumaraguru College of Technology, Coimbatore
 **Track:** 5 — AI Representation Optimizer
 **Demo video:** [link to be added]
