@@ -31,6 +31,20 @@ def load_store_data():
     policies = fetch_policies(token)
     return products, pages, shop, policies, token
 
+@st.cache_data(ttl=300)
+def load_executive_summary(score, critical, high, medium, empty_desc, total_products, shop_name):
+    results_for_summary = {
+        "score": score,
+        "critical": [{}] * critical,
+        "high": [{}] * high,
+        "medium": [{}] * medium,
+        "product_stats": {
+            "empty_descriptions": empty_desc,
+            "total_products": total_products
+        }
+    }
+    return get_executive_summary(results_for_summary, shop_name)
+
 with st.spinner("Connecting to Shopify store..."):
     products, pages, shop, policies, token = load_store_data()
 
@@ -53,7 +67,15 @@ with col4:
 st.divider()
 
 with st.spinner("Generating executive summary..."):
-    summary = get_executive_summary(results, shop.get('name'))
+    summary = load_executive_summary(
+        results['score'],
+        len(results['critical']),
+        len(results['high']),
+        len(results['medium']),
+        results['product_stats']['empty_descriptions'],
+        results['product_stats']['total_products'],
+        shop.get('name')
+    )
 st.info(f"**AI Summary:** {summary}")
 
 st.divider()
@@ -122,6 +144,8 @@ def render_issue(issue, key_prefix, products):
                             st.rerun()
                         else:
                             st.error("Failed to apply fix. Check your API token permissions.")
+                    else:
+                        st.warning("Auto-fix not available for this issue type. Please fix manually in Shopify.")
 
 tab1, tab2, tab3, tab4 = st.tabs(["🔴 Critical Issues", "🟠 High Issues", "🟡 Medium Issues", f"✅ Fixed ({len(st.session_state['fixed_issues'])})"])
 
