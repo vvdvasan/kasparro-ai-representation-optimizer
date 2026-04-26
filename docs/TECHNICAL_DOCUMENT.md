@@ -23,6 +23,7 @@ app.py              — Streamlit presentation layer
 ↑
 Shopify Admin API   — write-back layer (Apply Fix)
 ```
+
 Data flows in one direction during an audit. On a fix, 
 the write-back path returns from app.py through 
 shopify_client.py to Shopify. No component holds state 
