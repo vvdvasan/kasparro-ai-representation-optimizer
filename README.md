@@ -148,4 +148,4 @@ Dhatchanamoorthy K — ideation support and review.
 **Members:** Danavasan V (23BAU012) · Dhatchanamoorthy K (23BAD027) 
 — Kumaraguru College of Technology, Coimbatore
 **Track:** 5 — AI Representation Optimizer
-**Demo video:** [link to be added]
+**Demo video:** https://youtu.be/AfpawxqCBw4
